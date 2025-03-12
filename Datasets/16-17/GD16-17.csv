@@ -1,0 +1,88 @@
+Date,Visitor,GV,Home,GH
+2017-04-12,St. Louis Blues,2,Minnesota Wild,1
+2017-04-12,San Jose Sharks,3,Edmonton Oilers,2
+2017-04-12,Columbus Blue Jackets,1,Pittsburgh Penguins,3
+2017-04-12,New York Rangers,2,Montreal Canadiens,0
+2017-04-12,Boston Bruins,2,Ottawa Senators,1
+2017-04-13,Calgary Flames,2,Anaheim Ducks,3
+2017-04-13,Nashville Predators,1,Chicago Blackhawks,0
+2017-04-13,Toronto Maple Leafs,2,Washington Capitals,3
+2017-04-14,San Jose Sharks,0,Edmonton Oilers,2
+2017-04-14,St. Louis Blues,2,Minnesota Wild,1
+2017-04-14,New York Rangers,3,Montreal Canadiens,4
+2017-04-14,Columbus Blue Jackets,1,Pittsburgh Penguins,4
+2017-04-15,Calgary Flames,2,Anaheim Ducks,3
+2017-04-15,Toronto Maple Leafs,4,Washington Capitals,3
+2017-04-15,Boston Bruins,3,Ottawa Senators,4
+2017-04-15,Nashville Predators,5,Chicago Blackhawks,0
+2017-04-16,Pittsburgh Penguins,5,Columbus Blue Jackets,4
+2017-04-16,Montreal Canadiens,3,New York Rangers,1
+2017-04-16,Edmonton Oilers,1,San Jose Sharks,0
+2017-04-16,Minnesota Wild,1,St. Louis Blues,3
+2017-04-17,Washington Capitals,3,Toronto Maple Leafs,4
+2017-04-17,Chicago Blackhawks,2,Nashville Predators,3
+2017-04-17,Ottawa Senators,4,Boston Bruins,3
+2017-04-17,Anaheim Ducks,5,Calgary Flames,4
+2017-04-18,Pittsburgh Penguins,4,Columbus Blue Jackets,5
+2017-04-18,Montreal Canadiens,1,New York Rangers,2
+2017-04-18,Edmonton Oilers,0,San Jose Sharks,7
+2017-04-19,Ottawa Senators,1,Boston Bruins,0
+2017-04-19,Anaheim Ducks,3,Calgary Flames,1
+2017-04-19,Minnesota Wild,2,St. Louis Blues,0
+2017-04-19,Washington Capitals,5,Toronto Maple Leafs,4
+2017-04-20,New York Rangers,3,Montreal Canadiens,2
+2017-04-20,Columbus Blue Jackets,2,Pittsburgh Penguins,5
+2017-04-20,Chicago Blackhawks,1,Nashville Predators,4
+2017-04-20,San Jose Sharks,3,Edmonton Oilers,4
+2017-04-21,Boston Bruins,3,Ottawa Senators,2
+2017-04-21,Toronto Maple Leafs,1,Washington Capitals,2
+2017-04-22,St. Louis Blues,4,Minnesota Wild,3
+2017-04-22,Montreal Canadiens,1,New York Rangers,3
+2017-04-22,Edmonton Oilers,3,San Jose Sharks,1
+2017-04-23,Ottawa Senators,3,Boston Bruins,2
+2017-04-23,Washington Capitals,2,Toronto Maple Leafs,1
+2017-04-26,Nashville Predators,4,St. Louis Blues,3
+2017-04-26,Edmonton Oilers,5,Anaheim Ducks,3
+2017-04-27,New York Rangers,1,Ottawa Senators,2
+2017-04-27,Pittsburgh Penguins,3,Washington Capitals,2
+2017-04-28,Edmonton Oilers,2,Anaheim Ducks,1
+2017-04-28,Nashville Predators,2,St. Louis Blues,3
+2017-04-29,New York Rangers,5,Ottawa Senators,6
+2017-04-29,Pittsburgh Penguins,6,Washington Capitals,2
+2017-04-30,Anaheim Ducks,6,Edmonton Oilers,3
+2017-04-30,St. Louis Blues,1,Nashville Predators,3
+2017-05-01,Washington Capitals,3,Pittsburgh Penguins,2
+2017-05-02,St. Louis Blues,1,Nashville Predators,2
+2017-05-02,Ottawa Senators,1,New York Rangers,4
+2017-05-03,Anaheim Ducks,4,Edmonton Oilers,3
+2017-05-03,Washington Capitals,2,Pittsburgh Penguins,3
+2017-05-04,Ottawa Senators,1,New York Rangers,4
+2017-05-05,Edmonton Oilers,3,Anaheim Ducks,4
+2017-05-05,Nashville Predators,1,St. Louis Blues,2
+2017-05-06,New York Rangers,4,Ottawa Senators,5
+2017-05-06,Pittsburgh Penguins,2,Washington Capitals,4
+2017-05-07,Anaheim Ducks,1,Edmonton Oilers,7
+2017-05-07,St. Louis Blues,1,Nashville Predators,3
+2017-05-08,Washington Capitals,5,Pittsburgh Penguins,2
+2017-05-09,Ottawa Senators,4,New York Rangers,2
+2017-05-10,Pittsburgh Penguins,2,Washington Capitals,0
+2017-05-10,Edmonton Oilers,1,Anaheim Ducks,2
+2017-05-12,Nashville Predators,3,Anaheim Ducks,2
+2017-05-13,Ottawa Senators,2,Pittsburgh Penguins,1
+2017-05-14,Nashville Predators,3,Anaheim Ducks,5
+2017-05-15,Ottawa Senators,0,Pittsburgh Penguins,1
+2017-05-16,Anaheim Ducks,1,Nashville Predators,2
+2017-05-17,Pittsburgh Penguins,1,Ottawa Senators,5
+2017-05-18,Anaheim Ducks,3,Nashville Predators,2
+2017-05-19,Pittsburgh Penguins,3,Ottawa Senators,2
+2017-05-20,Nashville Predators,3,Anaheim Ducks,1
+2017-05-21,Ottawa Senators,0,Pittsburgh Penguins,7
+2017-05-22,Anaheim Ducks,3,Nashville Predators,6
+2017-05-23,Pittsburgh Penguins,1,Ottawa Senators,2
+2017-05-25,Ottawa Senators,2,Pittsburgh Penguins,3
+2017-05-29,Nashville Predators,3,Pittsburgh Penguins,5
+2017-05-31,Nashville Predators,1,Pittsburgh Penguins,4
+2017-06-03,Pittsburgh Penguins,1,Nashville Predators,5
+2017-06-05,Pittsburgh Penguins,1,Nashville Predators,4
+2017-06-08,Nashville Predators,0,Pittsburgh Penguins,6
+2017-06-11,Pittsburgh Penguins,2,Nashville Predators,0
