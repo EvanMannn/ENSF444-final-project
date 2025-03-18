@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+years = ["16-17", "17-18", "18-19", "19-20","20-21","21-22","22-23","23-24"]
+
 def goalDifferentialToHomeWinOrLose(gd):
     if gd < 0:
         return False
@@ -19,8 +21,7 @@ def modifyGameData(year):
     return newDf
 
 def concatGameData():
-    dataframes = [None,None,None,None,None,None]
-    years = ["19-20","20-21","21-22","22-23","23-24","24-25"]
+    dataframes = [None for x in years]
     for year in years:
         dataframes[years.index(year)] = modifyGameData(year)
     
@@ -47,8 +48,7 @@ def modifyTeamData(year):
     return combinedTeamsData
 
 def concatTeamData():
-    dataframes = [None,None,None,None,None,None]
-    years = ["19-20","20-21","21-22","22-23","23-24","24-25"]
+    dataframes = [None for x in years]
     for year in years:
         dataframes[years.index(year)] = modifyTeamData(year)
     
