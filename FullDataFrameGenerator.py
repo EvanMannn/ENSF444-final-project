@@ -27,7 +27,6 @@ def concatGameData():
     
     totalGameData = pd.concat(dataframes, ignore_index=True)
     totalGameData = totalGameData.dropna()
-    totalGameData.to_csv('GameData.csv')
     return totalGameData
 
 def modifyTeamData(year):
@@ -54,7 +53,6 @@ def concatTeamData():
     
     totalTeamsData = pd.concat(dataframes, ignore_index=True)
     totalTeamsData = totalTeamsData.dropna()
-    totalTeamsData.to_csv('TeamsData.csv')
     return totalTeamsData
 
 def combineTeamDataAndGameData(gameData, teamsData):
@@ -88,6 +86,8 @@ def combineTeamDataAndGameData(gameData, teamsData):
         else:
             playingTeamsDataByGame = pd.concat([playingTeamsDataByGame, playingTeamsDataCombined], ignore_index=True)
     
+    playingTeamsDataByGame = playingTeamsDataByGame.drop(columns=["TeamName_home","TeamName_visitor"])
+
     playingTeamsDataByGame.to_csv("FinalDataSet.csv")
         
 
