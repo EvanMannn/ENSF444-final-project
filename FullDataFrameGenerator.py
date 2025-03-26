@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-years = ["16-17", "17-18", "18-19", "19-20","20-21","21-22","22-23","23-24"]
+years = ["05-06", "06-07", "07-08", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14", "14-15", "15-16", "16-17", "17-18", "18-19", "19-20","20-21","21-22","22-23","23-24"]
 
 def goalDifferentialToHomeWinOrLose(gd):
     if gd < 0:
@@ -35,14 +35,11 @@ def modifyTeamData(year):
     allTeamStats = allTeamStats.drop(f"S%", axis=1)
     allTeamStats = allTeamStats.drop(f"SV%", axis=1)
 
-    allTeamAnalytics = pd.read_csv(f"Datasets\\{year}\\TA{year}.csv")
-    allTeamAnalytics = allTeamAnalytics.sort_values("TeamName", ignore_index=True)
-
     yearVector = pd.DataFrame(index=np.arange(allTeamStats.shape[0]), columns=np.arange(1))
     yearVector.columns = ["year"]
     yearVector["year"] = year
 
-    combinedTeamsData = pd.concat([yearVector, allTeamStats, allTeamAnalytics.iloc[:, 2:]], axis=1)
+    combinedTeamsData = pd.concat([yearVector, allTeamStats], axis=1)
     combinedTeamsData.drop_duplicates()
     return combinedTeamsData
 

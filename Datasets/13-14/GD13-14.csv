@@ -1,0 +1,94 @@
+Date,Visitor,GV,Home,GH
+2014-04-16,Columbus Blue Jackets,3,Pittsburgh Penguins,4
+2014-04-16,Dallas Stars,3,Anaheim Ducks,4
+2014-04-16,Montreal Canadiens,5,Tampa Bay Lightning,4
+2014-04-17,Minnesota Wild,4,Colorado Avalanche,5
+2014-04-17,Philadelphia Flyers,1,New York Rangers,4
+2014-04-17,Los Angeles Kings,3,San Jose Sharks,6
+2014-04-17,Chicago Blackhawks,3,St. Louis Blues,4
+2014-04-18,Dallas Stars,2,Anaheim Ducks,3
+2014-04-18,Detroit Red Wings,1,Boston Bruins,0
+2014-04-18,Montreal Canadiens,4,Tampa Bay Lightning,1
+2014-04-19,Chicago Blackhawks,3,St. Louis Blues,4
+2014-04-19,Columbus Blue Jackets,4,Pittsburgh Penguins,3
+2014-04-19,Minnesota Wild,2,Colorado Avalanche,4
+2014-04-20,Detroit Red Wings,1,Boston Bruins,4
+2014-04-20,Tampa Bay Lightning,2,Montreal Canadiens,3
+2014-04-20,Philadelphia Flyers,4,New York Rangers,2
+2014-04-20,Los Angeles Kings,2,San Jose Sharks,7
+2014-04-21,Pittsburgh Penguins,4,Columbus Blue Jackets,3
+2014-04-21,St. Louis Blues,0,Chicago Blackhawks,2
+2014-04-21,Anaheim Ducks,0,Dallas Stars,3
+2014-04-21,Colorado Avalanche,0,Minnesota Wild,1
+2014-04-22,New York Rangers,4,Philadelphia Flyers,1
+2014-04-22,Tampa Bay Lightning,3,Montreal Canadiens,4
+2014-04-22,Boston Bruins,3,Detroit Red Wings,0
+2014-04-22,San Jose Sharks,4,Los Angeles Kings,3
+2014-04-23,Pittsburgh Penguins,3,Columbus Blue Jackets,4
+2014-04-23,St. Louis Blues,3,Chicago Blackhawks,4
+2014-04-23,Anaheim Ducks,2,Dallas Stars,4
+2014-04-24,Boston Bruins,3,Detroit Red Wings,2
+2014-04-24,San Jose Sharks,3,Los Angeles Kings,6
+2014-04-24,Colorado Avalanche,1,Minnesota Wild,2
+2014-04-25,Dallas Stars,2,Anaheim Ducks,6
+2014-04-25,New York Rangers,1,Philadelphia Flyers,2
+2014-04-25,Chicago Blackhawks,3,St. Louis Blues,2
+2014-04-26,Minnesota Wild,3,Colorado Avalanche,4
+2014-04-26,Los Angeles Kings,3,San Jose Sharks,0
+2014-04-26,Columbus Blue Jackets,1,Pittsburgh Penguins,3
+2014-04-26,Detroit Red Wings,2,Boston Bruins,4
+2014-04-27,St. Louis Blues,1,Chicago Blackhawks,5
+2014-04-27,Anaheim Ducks,5,Dallas Stars,4
+2014-04-27,Philadelphia Flyers,2,New York Rangers,4
+2014-04-28,Pittsburgh Penguins,4,Columbus Blue Jackets,3
+2014-04-28,San Jose Sharks,1,Los Angeles Kings,4
+2014-04-28,Colorado Avalanche,2,Minnesota Wild,5
+2014-04-29,New York Rangers,2,Philadelphia Flyers,5
+2014-04-30,Los Angeles Kings,5,San Jose Sharks,1
+2014-04-30,Philadelphia Flyers,1,New York Rangers,2
+2014-04-30,Minnesota Wild,5,Colorado Avalanche,4
+2014-05-01,Montreal Canadiens,4,Boston Bruins,3
+2014-05-02,New York Rangers,3,Pittsburgh Penguins,2
+2014-05-02,Minnesota Wild,2,Chicago Blackhawks,5
+2014-05-03,Los Angeles Kings,3,Anaheim Ducks,2
+2014-05-03,Montreal Canadiens,3,Boston Bruins,5
+2014-05-04,Minnesota Wild,1,Chicago Blackhawks,4
+2014-05-04,New York Rangers,0,Pittsburgh Penguins,3
+2014-05-05,Los Angeles Kings,3,Anaheim Ducks,1
+2014-05-05,Pittsburgh Penguins,2,New York Rangers,0
+2014-05-06,Chicago Blackhawks,0,Minnesota Wild,4
+2014-05-06,Boston Bruins,2,Montreal Canadiens,4
+2014-05-07,Pittsburgh Penguins,4,New York Rangers,2
+2014-05-08,Anaheim Ducks,3,Los Angeles Kings,2
+2014-05-08,Boston Bruins,1,Montreal Canadiens,0
+2014-05-09,Chicago Blackhawks,2,Minnesota Wild,4
+2014-05-09,New York Rangers,5,Pittsburgh Penguins,1
+2014-05-10,Montreal Canadiens,2,Boston Bruins,4
+2014-05-10,Anaheim Ducks,2,Los Angeles Kings,0
+2014-05-11,Minnesota Wild,1,Chicago Blackhawks,2
+2014-05-11,Pittsburgh Penguins,1,New York Rangers,3
+2014-05-12,Los Angeles Kings,3,Anaheim Ducks,4
+2014-05-12,Boston Bruins,0,Montreal Canadiens,4
+2014-05-13,Chicago Blackhawks,2,Minnesota Wild,1
+2014-05-13,New York Rangers,2,Pittsburgh Penguins,1
+2014-05-14,Montreal Canadiens,3,Boston Bruins,1
+2014-05-14,Anaheim Ducks,1,Los Angeles Kings,2
+2014-05-16,Los Angeles Kings,6,Anaheim Ducks,2
+2014-05-17,New York Rangers,7,Montreal Canadiens,2
+2014-05-18,Los Angeles Kings,1,Chicago Blackhawks,3
+2014-05-19,New York Rangers,3,Montreal Canadiens,1
+2014-05-21,Los Angeles Kings,6,Chicago Blackhawks,2
+2014-05-22,Montreal Canadiens,3,New York Rangers,2
+2014-05-24,Chicago Blackhawks,3,Los Angeles Kings,4
+2014-05-25,Montreal Canadiens,2,New York Rangers,3
+2014-05-26,Chicago Blackhawks,2,Los Angeles Kings,5
+2014-05-27,New York Rangers,4,Montreal Canadiens,7
+2014-05-28,Los Angeles Kings,4,Chicago Blackhawks,5
+2014-05-29,Montreal Canadiens,0,New York Rangers,1
+2014-05-30,Chicago Blackhawks,4,Los Angeles Kings,3
+2014-06-01,Los Angeles Kings,5,Chicago Blackhawks,4
+2014-06-04,New York Rangers,2,Los Angeles Kings,3
+2014-06-07,New York Rangers,4,Los Angeles Kings,5
+2014-06-09,Los Angeles Kings,3,New York Rangers,0
+2014-06-11,Los Angeles Kings,1,New York Rangers,2
+2014-06-13,New York Rangers,2,Los Angeles Kings,3

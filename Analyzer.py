@@ -7,6 +7,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.model_selection import cross_validate
+from sklearn.pipeline import make_pipeline
+
+#Preprocessing
+from sklearn.preprocessing import StandardScaler
 
 #Models
 from sklearn.linear_model import LogisticRegression
@@ -18,13 +22,17 @@ targetVector = featureMatrix.pop("HomeWin")
 
 X_train, X_test, y_train, y_test = train_test_split(featureMatrix, targetVector, test_size=0.1, random_state=0)
 
-logReg = LogisticRegression(max_iter=500, C=10.0)
-randForest = RandomForestClassifier(max_depth=5, n_estimators=100)
-svc = SVC()
+logReg = LogisticRegression(max_iter=500, random_state=0)
+randForest = RandomForestClassifier(max_depth=10, n_estimators=500, random_state=0)
+svc = SVC(random_state=0)
 
-models = {"Logistic Regression": logReg,
+scaledLog = make_pipeline(StandardScaler(), logReg)
+scaledForest = make_pipeline(StandardScaler(), randForest)
+scaledSVC = make_pipeline(StandardScaler(), svc)
+
+models = {"Logistic Regression": scaledLog,
           "Random Forest": randForest,
-          "SVC": svc}
+          "SVC": scaledSVC}
 
 model_scores = pd.DataFrame({'Model': models.keys(),
                              'Training Accuracy': [None, None, None],
