@@ -95,7 +95,7 @@ confusion_matrix_forest = confusion_matrix(y_test, y_pred_forest)
 confusion_matrix_svc = confusion_matrix(y_test, y_pred_svc)
 
 #Display confusion matrices
-fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+fig, axes = plt.subplots(1, 3, figsize=(12, 6))
 
 conf_matrices = [confusion_matrix_log, confusion_matrix_forest, confusion_matrix_svc]
 titles = ["Logistic Regression", "Random Forest", "SVC"]
