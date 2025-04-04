@@ -1,4 +1,4 @@
-from fpdf import FPDF
+import os
 import pandas as pd
 import numpy as np
 import seaborn as sn
@@ -18,6 +18,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
+
+#PDF
+from matplotlib.backends.backend_pdf import PdfPages
 
 #Separate dataset into feature matrix and target vector
 feature_matrix = pd.read_csv("./FinalDataSet.csv")
@@ -85,27 +88,57 @@ report_log = classification_report(y_test, y_pred_log)
 report_forest = classification_report(y_test, y_pred_forest)
 report_svc = classification_report(y_test, y_pred_svc)
 
-print(f"\nLogistic Classification Report:\n {report_log}")
-print(f"RandomForest Classification Report:\n {report_forest}")
-print(f"SVC Classification Report:\n {report_svc}")
+def save_report(pdf_filename="classification_reports.pdf"):
+    with PdfPages(pdf_filename) as pdf:
+        # Add a title and the classification report
+        fig, ax = plt.subplots(figsize=(8.5, 11))
+        ax.text(0.5, 0.95, "Model Performance Report", fontsize=14, ha="center", va="top", weight="bold")
+        ax.text(0, 0.85, "Classification Reports:", fontsize=12, va="top", family="monospace")
+        ax.text(0, 0.75, f"Logistic Regression:\n{report_log}", fontsize=10, va="top", family="monospace")
+        ax.text(0, 0.45, f"Random Forest:\n{report_forest}", fontsize=10, va="top", family="monospace")
+        ax.text(0, 0.15, f"SVC:\n{report_svc}", fontsize=10, va="top", family="monospace")
+        
+        # Add model scores to the report
+        ax.text(0, -0.1, "Model Accuracy Scores:", fontsize=12, va="top", family="monospace")
+        ax.text(0, -0.2, f"Logistic Regression - Training Accuracy: {model_scores.loc['Logistic Regression', 'Training Accuracy']:.4f}, Validation Accuracy: {model_scores.loc['Logistic Regression', 'Validation Accuracy']:.4f}", fontsize=10, va="top", family="monospace")
+        ax.text(0, -0.3, f"Random Forest - Training Accuracy: {model_scores.loc['Random Forest', 'Training Accuracy']:.4f}, Validation Accuracy: {model_scores.loc['Random Forest', 'Validation Accuracy']:.4f}", fontsize=10, va="top", family="monospace")
+        ax.text(0, -0.4, f"SVC - Training Accuracy: {model_scores.loc['SVC', 'Training Accuracy']:.4f}, Validation Accuracy: {model_scores.loc['SVC', 'Validation Accuracy']:.4f}", fontsize=10, va="top", family="monospace")
 
-#Generate confusion matrix for each model
-confusion_matrix_log = confusion_matrix(y_test, y_pred_log)
-confusion_matrix_forest = confusion_matrix(y_test, y_pred_forest)
-confusion_matrix_svc = confusion_matrix(y_test, y_pred_svc)
+        ax.axis("off")
+        pdf.savefig(fig, bbox_inches="tight")
+        plt.close(fig)
 
-#Display confusion matrices
-fig, axes = plt.subplots(1, 3, figsize=(12, 6))
+        # Add best parameters for each model
+        fig, ax = plt.subplots(figsize=(8.5, 11))
+        ax.text(0.5, 0.95, "Best Parameters for Models", fontsize=14, ha="center", va="top", weight="bold")
+        ax.text(0, 0.85, f"Logistic Regression: {grid_log.best_params_}", fontsize=12, va="top", family="monospace")
+        ax.text(0, 0.75, f"Random Forest: {grid_forest.best_params_}", fontsize=12, va="top", family="monospace")
+        ax.text(0, 0.65, f"SVC: {grid_svc.best_params_}", fontsize=12, va="top", family="monospace")
 
-conf_matrices = [confusion_matrix_log, confusion_matrix_forest, confusion_matrix_svc]
-titles = ["Logistic Regression", "Random Forest", "SVC"]
-colors = ["Blues", "Greens", "Reds"]
+        ax.axis("off")
+        pdf.savefig(fig, bbox_inches="tight")
+        plt.close(fig)
 
-for i, ax in enumerate(axes):
-    sn.heatmap(conf_matrices[i], annot=True, fmt='d', cmap=colors[i], 
-               xticklabels=["Predicted Negative", "Predicted Positive"], 
-               yticklabels=["Actual Negative", "Actual Positive"], ax=ax)
-    ax.set_title(f"Confusion Matrix - {titles[i]}")
+        # Add the confusion matrices on a separate page with graphs
+        fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
-plt.tight_layout()
-plt.show()
+        confusion_matrices = [confusion_matrix(y_test, y_pred_log),
+                              confusion_matrix(y_test, y_pred_forest),
+                              confusion_matrix(y_test, y_pred_svc)]
+        titles = ["Logistic Regression", "Random Forest", "SVC"]
+        colors = ["Blues", "Greens", "Reds"]
+
+        for i, ax in enumerate(axes):
+            sn.heatmap(confusion_matrices[i], annot=True, fmt='d', cmap=colors[i], 
+                       xticklabels=["Predicted Negative", "Predicted Positive"], 
+                       yticklabels=["Actual Negative", "Actual Positive"], ax=ax)
+            ax.set_title(f"Confusion Matrix - {titles[i]}")
+        
+        plt.tight_layout()
+        pdf.savefig(fig, bbox_inches="tight")
+        plt.close(fig)
+
+    print(f"PDF report saved as {pdf_filename}")
+
+#Save report as PDF
+save_report()
