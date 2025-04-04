@@ -74,10 +74,6 @@ grid_log.fit(X_train, y_train)
 grid_forest.fit(X_train, y_train)
 grid_svc.fit(X_train, y_train)
 
-print("\nBest parameters for Logistic Regression:", grid_log.best_params_)
-print("Best parameters for Random Forest:", grid_forest.best_params_)
-print("Best parameters for SVC:", grid_svc.best_params_)
-
 #Predict values with each model
 y_pred_log = grid_log.predict(X_test)
 y_pred_forest = grid_forest.predict(X_test)
@@ -90,7 +86,7 @@ report_svc = classification_report(y_test, y_pred_svc)
 
 def save_report(pdf_filename="classification_reports.pdf"):
     with PdfPages(pdf_filename) as pdf:
-        # Add a title and the classification report
+        #Classification reports
         fig, ax = plt.subplots(figsize=(8.5, 11))
         ax.text(0.5, 0.95, "Model Performance Report", fontsize=14, ha="center", va="top", weight="bold")
         ax.text(0, 0.85, "Classification Reports:", fontsize=12, va="top", family="monospace")
@@ -98,7 +94,7 @@ def save_report(pdf_filename="classification_reports.pdf"):
         ax.text(0, 0.45, f"Random Forest:\n{report_forest}", fontsize=10, va="top", family="monospace")
         ax.text(0, 0.15, f"SVC:\n{report_svc}", fontsize=10, va="top", family="monospace")
         
-        # Add model scores to the report
+        #Model scores to report
         ax.text(0, -0.1, "Model Accuracy Scores:", fontsize=12, va="top", family="monospace")
         ax.text(0, -0.2, f"Logistic Regression - Training Accuracy: {model_scores.loc['Logistic Regression', 'Training Accuracy']:.4f}, Validation Accuracy: {model_scores.loc['Logistic Regression', 'Validation Accuracy']:.4f}", fontsize=10, va="top", family="monospace")
         ax.text(0, -0.3, f"Random Forest - Training Accuracy: {model_scores.loc['Random Forest', 'Training Accuracy']:.4f}, Validation Accuracy: {model_scores.loc['Random Forest', 'Validation Accuracy']:.4f}", fontsize=10, va="top", family="monospace")
@@ -108,7 +104,7 @@ def save_report(pdf_filename="classification_reports.pdf"):
         pdf.savefig(fig, bbox_inches="tight")
         plt.close(fig)
 
-        # Add best parameters for each model
+        #Best parameters for each model
         fig, ax = plt.subplots(figsize=(8.5, 11))
         ax.text(0.5, 0.95, "Best Parameters for Models", fontsize=14, ha="center", va="top", weight="bold")
         ax.text(0, 0.85, f"Logistic Regression: {grid_log.best_params_}", fontsize=12, va="top", family="monospace")
@@ -119,7 +115,7 @@ def save_report(pdf_filename="classification_reports.pdf"):
         pdf.savefig(fig, bbox_inches="tight")
         plt.close(fig)
 
-        # Add the confusion matrices on a separate page with graphs
+        #Confusion matrices on separate page
         fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
         confusion_matrices = [confusion_matrix(y_test, y_pred_log),
@@ -138,7 +134,7 @@ def save_report(pdf_filename="classification_reports.pdf"):
         pdf.savefig(fig, bbox_inches="tight")
         plt.close(fig)
 
-    print(f"PDF report saved as {pdf_filename}")
+    print(f"\nPDF report saved as {pdf_filename}")
 
 #Save report as PDF
 save_report()
