@@ -11,6 +11,7 @@ from sklearn.pipeline import make_pipeline
 #Preprocessing
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.calibration import CalibratedClassifierCV
 
 #Models
 from sklearn.linear_model import LogisticRegression
@@ -34,13 +35,14 @@ def get_models():
     log_reg = LogisticRegression(max_iter=500, random_state=0)
     rand_forest = RandomForestClassifier(max_depth=10, n_estimators=500, random_state=0)
     svc = SVC(class_weight='balanced', random_state=0, probability=True)
+    calibrated_svc = CalibratedClassifierCV(svc, cv=5)
 
     n_components = 10
 
     return {
         "Logistic Regression": make_pipeline(StandardScaler(), PCA(n_components=n_components), log_reg),
         "Random Forest": make_pipeline(StandardScaler(), PCA(n_components=n_components), rand_forest),
-        "SVC": make_pipeline(StandardScaler(), PCA(n_components=5), svc),
+        "SVC": make_pipeline(StandardScaler(), calibrated_svc),
     }
 
 #Cross validate models and return results
@@ -64,7 +66,10 @@ def tune_models(X_train, y_train, models):
             'randomforestclassifier__n_estimators': [5, 10, 100, 1000],
             'randomforestclassifier__max_depth': [5, 10, 20, 50]
         },
-        "SVC": {'svc__C': [0.001, 0.01, 0.1, 1, 10, 100]}
+        "SVC": {
+            'calibratedclassifiercv__estimator__C': [0.1, 1, 10],
+            'calibratedclassifiercv__estimator__kernel': ['linear', 'rbf']
+        }
     }
 
     tuned_models = {}
