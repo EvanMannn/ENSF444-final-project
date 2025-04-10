@@ -13,6 +13,7 @@ from sklearn.pipeline import make_pipeline
 
 #Preprocessing
 from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
 #Models
 from sklearn.linear_model import LogisticRegression
@@ -37,10 +38,12 @@ def get_models():
     rand_forest = RandomForestClassifier(max_depth=10, n_estimators=500, random_state=0)
     svc = SVC(class_weight='balanced', random_state=0)
 
+    n_components = 10
+
     return {
-        "Logistic Regression": make_pipeline(StandardScaler(), log_reg),
-        "Random Forest": make_pipeline(StandardScaler(), rand_forest),
-        "SVC": make_pipeline(StandardScaler(), svc),
+        "Logistic Regression": make_pipeline(StandardScaler(), PCA(n_components=n_components), log_reg),
+        "Random Forest": make_pipeline(StandardScaler(), PCA(n_components=n_components), rand_forest),
+        "SVC": make_pipeline(StandardScaler(), PCA(n_components=n_components), svc),
     }
 
 #Cross validate models and return results
@@ -100,7 +103,7 @@ def plot_feature_importance(model, model_name, feature_names, pdf):
         return
 
     indices = np.argsort(importances)[::-1]
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_title(f"Feature Importance - {model_name}")
     ax.bar(range(len(importances)), importances[indices])
     ax.set_xticks(range(len(importances)))
