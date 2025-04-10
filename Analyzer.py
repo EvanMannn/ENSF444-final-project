@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 #Helper functions
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, accuracy_score
 from sklearn.model_selection import cross_validate
 from sklearn.pipeline import make_pipeline
 
@@ -22,105 +22,129 @@ from sklearn.svm import SVC
 #PDF
 from matplotlib.backends.backend_pdf import PdfPages
 
-#Separate dataset into feature matrix and target vector
-feature_matrix = pd.read_csv("./FinalDataSet.csv")
-target_vector = feature_matrix.pop("HomeWin")
+#Pull data from the CSV dataset, and split into train and test datasets
+def load_data(filepath):
+    feature_matrix = pd.read_csv(filepath)
+    target_vector = feature_matrix.pop("HomeWin")
 
-#Split your training and test sets
-X_train, X_test, y_train, y_test = train_test_split(feature_matrix, target_vector, test_size=0.1, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(feature_matrix, target_vector, test_size=0.1, random_state=0)
 
-#Create models
-log_reg = LogisticRegression(max_iter=500, random_state=0)
-rand_forest = RandomForestClassifier(max_depth=10, n_estimators=500, random_state=0)
-svc = SVC(class_weight='balanced', random_state=0)
+    return X_train, X_test, y_train, y_test
 
-#Create pipeline for models
-scaled_log = make_pipeline(StandardScaler(), log_reg)
-scaled_forest = make_pipeline(StandardScaler(), rand_forest)
-scaled_svc = make_pipeline(StandardScaler(), svc)
+#Set up the models, and create scale pipeline for each
+def get_models():
+    log_reg = LogisticRegression(max_iter=500, random_state=0)
+    rand_forest = RandomForestClassifier(max_depth=10, n_estimators=500, random_state=0)
+    svc = SVC(class_weight='balanced', random_state=0)
 
-models = {"Logistic Regression": scaled_log,
-          "Random Forest": rand_forest,
-          "SVC": scaled_svc}
+    return {
+        "Logistic Regression": make_pipeline(StandardScaler(), log_reg),
+        "Random Forest": make_pipeline(StandardScaler(), rand_forest),
+        "SVC": make_pipeline(StandardScaler(), svc),
+    }
 
-model_scores = pd.DataFrame({'Model': models.keys(),
-                             'Training Accuracy': [None, None, None],
-                             'Validation Accuracy': [None, None, None]})
+#Cross validate models and return results
+def evaluate_models(models, X_train, y_train):
+    results = []
+    for name, model in models.items():
+        scores = cross_validate(model, X_train, y_train, cv=5, scoring="accuracy", return_train_score=True)
+        results.append({
+            "Model": name,
+            "Training Accuracy": np.mean(scores["train_score"]),
+            "Validation Accuracy": np.mean(scores["test_score"])
+        })
 
-#Cross validate models and record scores
-model_scores = model_scores.set_index('Model')
-for model in models.keys():
-    scores = cross_validate(models[model], X_train, y_train, cv=5, scoring="accuracy", return_train_score=True)
-    train_accuracy = sum(scores["train_score"]) / len(scores["train_score"])
-    validation_accuracy = sum(scores["test_score"]) / len(scores["test_score"])
-    new_row = [train_accuracy, validation_accuracy]
-    model_scores.loc[model, :] = new_row
+    return pd.DataFrame(results).set_index("Model")
 
-print(model_scores)
+#Create grid search for each model and tune models for best parameters
+def tune_models(X_train, y_train, models):
+    param_grids = {
+        "Logistic Regression": {'logisticregression__C': [0.01, 0.1, 1, 10, 100]},
+        "Random Forest": {
+            'randomforestclassifier__n_estimators': [5, 10, 100, 1000],
+            'randomforestclassifier__max_depth': [5, 10, 20, 50]
+        },
+        "SVC": {'svc__C': [0.01, 0.1, 1, 10, 100]}
+    }
 
-param_grid_log = {'logisticregression__C': [0.01, 0.1, 1, 10, 100]}
-param_grid_forest = {
-    'randomforestclassifier__n_estimators': [5, 10, 100, 1000],
-    'randomforestclassifier__max_depth': [5, 10, 20, 50]
-}
-param_grid_svc = {'svc__C': [0.01, 0.1, 1, 10, 100]}
+    tuned_models = {}
+    for name in models:
+        grid = GridSearchCV(models[name], param_grids[name], cv=5, return_train_score=True)
+        grid.fit(X_train, y_train)
+        tuned_models[name] = grid
 
-grid_log = GridSearchCV(scaled_log, param_grid_log, cv=5, return_train_score=True)
-grid_forest = GridSearchCV(scaled_forest, param_grid_forest, cv=5, return_train_score=True)
-grid_svc = GridSearchCV(scaled_svc, param_grid_svc, cv=5, return_train_score=True)
+    return tuned_models
 
-#Fit each model
-grid_log.fit(X_train, y_train)
-grid_forest.fit(X_train, y_train)
-grid_svc.fit(X_train, y_train)
+#Get scores and predictions from each model
+def evaluate_test_performance(tuned_models, X_test, y_test):
+    reports = {}
+    predictions = {}
+    scores = {}
 
-#Predict values with each model
-y_pred_log = grid_log.predict(X_test)
-y_pred_forest = grid_forest.predict(X_test)
-y_pred_svc = grid_svc.predict(X_test)
+    for name, model in tuned_models.items():
+        y_pred = model.predict(X_test)
+        predictions[name] = y_pred
+        reports[name] = classification_report(y_test, y_pred)
+        scores[name] = accuracy_score(y_test, y_pred)
 
-#Generate reports for each model
-report_log = classification_report(y_test, y_pred_log)
-report_forest = classification_report(y_test, y_pred_forest)
-report_svc = classification_report(y_test, y_pred_svc)
+    return reports, predictions, scores
 
-def save_report(pdf_filename="classification_reports.pdf"):
-    with PdfPages(pdf_filename) as pdf:
-        #Classification reports
+#Create feature importance plot for each supported model
+def plot_feature_importance(model, model_name, feature_names, pdf):
+    if "randomforestclassifier" in model.best_estimator_.named_steps:
+        importances = model.best_estimator_.named_steps["randomforestclassifier"].feature_importances_
+    elif "logisticregression" in model.best_estimator_.named_steps:
+        importances = np.abs(model.best_estimator_.named_steps["logisticregression"].coef_[0])
+    else:
+        print(f"Feature importance not supported for {model_name}")
+        return
+
+    indices = np.argsort(importances)[::-1]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.set_title(f"Feature Importance - {model_name}")
+    ax.bar(range(len(importances)), importances[indices])
+    ax.set_xticks(range(len(importances)))
+    ax.set_xticklabels(np.array(feature_names)[indices], rotation=90)
+    pdf.savefig(fig)
+    plt.close(fig)
+
+
+#Add results to PDF report
+def create_pdf_report(reports, model_scores, test_scores, tuned_models, predictions, y_test, feature_names, filename="classification_reports.pdf"):
+    with PdfPages(filename) as pdf:
+        # Report text
         fig, ax = plt.subplots(figsize=(8.5, 11))
-        ax.text(0.5, 0.95, "Model Performance Report", fontsize=14, ha="center", va="top", weight="bold")
-        ax.text(0, 0.85, "Classification Reports:", fontsize=12, va="top", family="monospace")
-        ax.text(0, 0.75, f"Logistic Regression:\n{report_log}", fontsize=10, va="top", family="monospace")
-        ax.text(0, 0.45, f"Random Forest:\n{report_forest}", fontsize=10, va="top", family="monospace")
-        ax.text(0, 0.15, f"SVC:\n{report_svc}", fontsize=10, va="top", family="monospace")
-        
-        #Model scores to report
-        ax.text(0, -0.1, "Model Accuracy Scores:", fontsize=12, va="top", family="monospace")
-        ax.text(0, -0.2, f"Logistic Regression - Training Accuracy: {model_scores.loc['Logistic Regression', 'Training Accuracy']:.4f}, Validation Accuracy: {model_scores.loc['Logistic Regression', 'Validation Accuracy']:.4f}", fontsize=10, va="top", family="monospace")
-        ax.text(0, -0.3, f"Random Forest - Training Accuracy: {model_scores.loc['Random Forest', 'Training Accuracy']:.4f}, Validation Accuracy: {model_scores.loc['Random Forest', 'Validation Accuracy']:.4f}", fontsize=10, va="top", family="monospace")
-        ax.text(0, -0.4, f"SVC - Training Accuracy: {model_scores.loc['SVC', 'Training Accuracy']:.4f}, Validation Accuracy: {model_scores.loc['SVC', 'Validation Accuracy']:.4f}", fontsize=10, va="top", family="monospace")
-
+        ax.text(0.5, 1, "Model Performance Report", fontsize=16, ha="center", weight="bold")
+        y = 0.95
+        for name, report in reports.items():
+            ax.text(0, y, f"{name}:\n{report}", fontsize=10, va="top", family="monospace")
+            y -= 0.25
         ax.axis("off")
-        pdf.savefig(fig, bbox_inches="tight")
+        pdf.savefig(fig)
         plt.close(fig)
 
-        #Best parameters for each model
-        fig, ax = plt.subplots(figsize=(8.5, 11))
-        ax.text(0.5, 0.95, "Best Parameters for Models", fontsize=14, ha="center", va="top", weight="bold")
-        ax.text(0, 0.85, f"Logistic Regression: {grid_log.best_params_}", fontsize=12, va="top", family="monospace")
-        ax.text(0, 0.75, f"Random Forest: {grid_forest.best_params_}", fontsize=12, va="top", family="monospace")
-        ax.text(0, 0.65, f"SVC: {grid_svc.best_params_}", fontsize=12, va="top", family="monospace")
+        # Accuracy Table
+        model_scores["Test Accuracy"] = model_scores.index.map(lambda x: test_scores.get(x, "N/A"))
 
+        fig, ax = plt.subplots(figsize=(6, 3))
         ax.axis("off")
-        pdf.savefig(fig, bbox_inches="tight")
+        table = ax.table(cellText=model_scores.values,
+                         rowLabels=model_scores.index,
+                         colLabels=model_scores.columns,
+                         loc='center')
+        table.auto_set_font_size(False)
+        table.set_fontsize(7)
+        table.scale(1.0, 1.5)
+        plt.subplots_adjust(left=0.25, right=0.9, top=0.9, bottom=0.1)
+        pdf.savefig(fig)
         plt.close(fig)
 
-        #Confusion matrices on separate page
+        #Confusion Matrices
         fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
-        confusion_matrices = [confusion_matrix(y_test, y_pred_log),
-                              confusion_matrix(y_test, y_pred_forest),
-                              confusion_matrix(y_test, y_pred_svc)]
+        confusion_matrices = [confusion_matrix(y_test, predictions['Logistic Regression'].astype(int)),
+                            confusion_matrix(y_test, predictions['Random Forest'].astype(int)),
+                            confusion_matrix(y_test, predictions['SVC'].astype(int))]
         titles = ["Logistic Regression", "Random Forest", "SVC"]
         colors = ["Blues", "Greens", "Reds"]
 
@@ -129,12 +153,33 @@ def save_report(pdf_filename="classification_reports.pdf"):
                        xticklabels=["Predicted Negative", "Predicted Positive"], 
                        yticklabels=["Actual Negative", "Actual Positive"], ax=ax)
             ax.set_title(f"Confusion Matrix - {titles[i]}")
-        
         plt.tight_layout()
-        pdf.savefig(fig, bbox_inches="tight")
+        pdf.savefig(fig)
         plt.close(fig)
 
-    print(f"\nPDF report saved as {pdf_filename}")
+        #Feature Importance Graphs
+        for name in ["Logistic Regression", "Random Forest"]:
+            plot_feature_importance(tuned_models[name], name, feature_names, pdf)
 
-#Save report as PDF
-save_report()
+    print(f"\nPDF report saved as {filename}")
+
+#Main function
+def run_pipeline(csv_path):
+    X_train, X_test, y_train, y_test = load_data(csv_path)
+    feature_names = X_train.columns
+
+    models = get_models()
+    model_scores = evaluate_models(models, X_train, y_train)
+    tuned_models = tune_models(X_train, y_train, models)
+    reports, predictions, test_scores = evaluate_test_performance(tuned_models, X_test, y_test)
+
+    print("\n--- Model Scores ---")
+    print(model_scores)
+    print("\n--- Test Accuracies ---")
+    for name, score in test_scores.items():
+        print(f"{name}: {score:.4f}")
+
+    create_pdf_report(reports, model_scores, test_scores, tuned_models, predictions, y_test, feature_names)
+
+if __name__ == "__main__":
+    run_pipeline("./FinalDataSet.csv")
