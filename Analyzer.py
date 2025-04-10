@@ -1,14 +1,11 @@
-import os
 import pandas as pd
 import numpy as np
 import seaborn as sn
 import matplotlib.pyplot as plt
 
 #Helper functions
-from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report, accuracy_score
-from sklearn.model_selection import cross_validate
+from sklearn.model_selection import GridSearchCV, train_test_split, cross_validate
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, classification_report, accuracy_score
 from sklearn.pipeline import make_pipeline
 
 #Preprocessing
@@ -36,14 +33,14 @@ def load_data(filepath):
 def get_models():
     log_reg = LogisticRegression(max_iter=500, random_state=0)
     rand_forest = RandomForestClassifier(max_depth=10, n_estimators=500, random_state=0)
-    svc = SVC(class_weight='balanced', random_state=0)
+    svc = SVC(class_weight='balanced', random_state=0, probability=True)
 
     n_components = 10
 
     return {
         "Logistic Regression": make_pipeline(StandardScaler(), PCA(n_components=n_components), log_reg),
         "Random Forest": make_pipeline(StandardScaler(), PCA(n_components=n_components), rand_forest),
-        "SVC": make_pipeline(StandardScaler(), PCA(n_components=n_components), svc),
+        "SVC": make_pipeline(StandardScaler(), PCA(n_components=5), svc),
     }
 
 #Cross validate models and return results
@@ -67,7 +64,7 @@ def tune_models(X_train, y_train, models):
             'randomforestclassifier__n_estimators': [5, 10, 100, 1000],
             'randomforestclassifier__max_depth': [5, 10, 20, 50]
         },
-        "SVC": {'svc__C': [0.01, 0.1, 1, 10, 100]}
+        "SVC": {'svc__C': [0.001, 0.01, 0.1, 1, 10, 100]}
     }
 
     tuned_models = {}
@@ -78,19 +75,33 @@ def tune_models(X_train, y_train, models):
 
     return tuned_models
 
+def adjust_threshold(model, X_test, y_test, threshold=0.5):
+    y_prob = model.predict_proba(X_test)[:, 1]
+    y_pred = (y_prob >= threshold).astype(int)
+    
+    precision = precision_score(y_test, y_pred, zero_division=1)
+    recall = recall_score(y_test, y_pred)
+    
+    return precision, recall, y_pred
+
 #Get scores and predictions from each model
-def evaluate_test_performance(tuned_models, X_test, y_test):
+def evaluate_test_performance(tuned_models, X_test, y_test, threshold=0.5):
     reports = {}
     predictions = {}
     scores = {}
+    precisions = {}
+    recalls = {}
 
     for name, model in tuned_models.items():
-        y_pred = model.predict(X_test)
-        predictions[name] = y_pred
+        precision, recall, y_pred = adjust_threshold(model, X_test, y_test, threshold)
         reports[name] = classification_report(y_test, y_pred)
+        predictions[name] = y_pred
         scores[name] = accuracy_score(y_test, y_pred)
+        precisions[name] = precision
+        recalls[name] = recall
 
-    return reports, predictions, scores
+    return reports, predictions, scores, precisions, recalls
+
 
 #Create feature importance plot for each supported model
 def plot_feature_importance(model, model_name, feature_names, pdf):
@@ -111,7 +122,6 @@ def plot_feature_importance(model, model_name, feature_names, pdf):
     pdf.savefig(fig)
     plt.close(fig)
 
-
 #Add results to PDF report
 def create_pdf_report(reports, model_scores, test_scores, tuned_models, predictions, y_test, feature_names, filename="classification_reports.pdf"):
     with PdfPages(filename) as pdf:
@@ -121,6 +131,21 @@ def create_pdf_report(reports, model_scores, test_scores, tuned_models, predicti
         y = 0.95
         for name, report in reports.items():
             ax.text(0, y, f"{name}:\n{report}", fontsize=10, va="top", family="monospace")
+            y -= 0.25
+        ax.axis("off")
+        pdf.savefig(fig)
+        plt.close(fig)
+
+        #Best Parameters
+        fig, ax = plt.subplots(figsize=(8.5, 11))
+        ax.text(0.5, 1, "Best Hyperparameters for Each Model", fontsize=14, ha="center", weight="bold")
+        y = 0.9
+        for name, grid_search in tuned_models.items():
+            params = grid_search.best_params_
+            param_text = f"{name} Best Params:\n"
+            for param, value in params.items():
+                param_text += f"  {param}: {value}\n"
+            ax.text(0, y, param_text, fontsize=10, va="top", family="monospace")
             y -= 0.25
         ax.axis("off")
         pdf.savefig(fig)
@@ -174,13 +199,16 @@ def run_pipeline(csv_path):
     models = get_models()
     model_scores = evaluate_models(models, X_train, y_train)
     tuned_models = tune_models(X_train, y_train, models)
-    reports, predictions, test_scores = evaluate_test_performance(tuned_models, X_test, y_test)
+    reports, predictions, test_scores, precisions, recalls = evaluate_test_performance(tuned_models, X_test, y_test)
 
     print("\n--- Model Scores ---")
     print(model_scores)
     print("\n--- Test Accuracies ---")
     for name, score in test_scores.items():
         print(f"{name}: {score:.4f}")
+    print("\n--- Precision and Recall ---")
+    for name in precisions:
+        print(f"{name} - Precision: {precisions[name]:.4f}, Recall: {recalls[name]:.4f}")
 
     create_pdf_report(reports, model_scores, test_scores, tuned_models, predictions, y_test, feature_names)
 
