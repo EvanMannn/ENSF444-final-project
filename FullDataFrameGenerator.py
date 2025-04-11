@@ -85,10 +85,8 @@ def combineTeamDataAndGameData(gameData, teamsData):
     
     playingTeamsDataByGame = playingTeamsDataByGame.drop(columns=["TeamName_home","TeamName_visitor"])
 
-    playingTeamsDataByGame.to_csv("FinalDataSet.csv")
+    playingTeamsDataByGame.to_csv("FinalDataSet.csv", index=False)
         
-
-
 gd = concatGameData()
 td = concatTeamData()
 combineTeamDataAndGameData(gd, td)
