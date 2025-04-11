@@ -34,14 +34,17 @@ Simply run the [Analyzer.py](./Analyzer.py) file, and wait for the dataset predi
 ## Results
 The results of the models and their outcomes can be found in the [Classification Report](./classification_reports.pdf). They are also listed below:
 ### Classification Reports
-![logistic_report](https://github.com/user-attachments/assets/114deba4-e793-4b33-8c38-cbf201b3d70e)
-![forest_report](https://github.com/user-attachments/assets/45b41703-e389-440a-a02f-2c8fd74aa917)
-![svc_report](https://github.com/user-attachments/assets/52439626-e7cd-4f5a-b68a-e43c6067998c)
-### Best Parameters
-![best_params](https://github.com/user-attachments/assets/9e68977d-f84d-4e29-8220-7d74b8ed1e3e)
-### Model Scores
-![model_scores](https://github.com/user-attachments/assets/35ba6884-48a0-4f4d-ac5d-71f9fde183ad)
-### Confusion Matrices
-![matrices](https://github.com/user-attachments/assets/53ebbd80-9dc4-461b-88cc-9ff6253dd210)
+![logistic_report](readme_images/logistic_report.jpg)  
+![forest_report](readme_images/forest_report.jpg)  
+![svc_report](readme_images/svc_report.jpg)  
+
+### Best Parameters  
+![best_params](readme_images/best_params.jpg)  
+
+### Model Scores  
+![model_scores](readme_images/model_scores.jpg)  
+
+### Confusion Matrices  
+![matrices](readme_images/matrices.png)
 
 
