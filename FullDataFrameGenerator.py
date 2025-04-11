@@ -83,7 +83,7 @@ def combineTeamDataAndGameData(gameData, teamsData):
         else:
             playingTeamsDataByGame = pd.concat([playingTeamsDataByGame, playingTeamsDataCombined], ignore_index=True)
     
-    playingTeamsDataByGame = playingTeamsDataByGame.drop(columns=["TeamName_home","TeamName_visitor"])
+    playingTeamsDataByGame = playingTeamsDataByGame.drop(columns=["TeamName_home","TeamName_visitor","GP_home","GP_visitor"])
 
     playingTeamsDataByGame.to_csv("FinalDataSet.csv", index=False)
         
